@@ -45,6 +45,7 @@ function onRender() {
     connection.trigger('requestEndpoints');
     connection.trigger('requestInteraction');
     connection.trigger('requestTriggerEventDefinition');
+    // envia o envento requestSchema
     connection.trigger('requestSchema');
 
     // validation
@@ -62,6 +63,7 @@ function onRender() {
  * @param data
  */
 function initialize(data) {
+    // caso a Custom Activity foi configurada previamente, os dados salvos serão recuperados aqui
     console.log('Initializing Data', data);
     if (data) {
         payload = data;
@@ -129,6 +131,18 @@ function onGetInteraction(interaction) {
 function onGetrequestedSchema(data) {
     console.log('onRequestedSchema:', data);
 
+    const hasInArguments = Boolean(
+        payload['arguments'] &&
+        payload['arguments'].execute &&
+        payload['arguments'].execute.inArguments &&
+        payload['arguments'].execute.inArguments.length > 0
+    );
+    const inArguments = hasInArguments
+        ? payload['arguments'].execute.inArguments
+        : {};
+
+    let selectedDEFieldsInput = inArguments[0]?.DataExtensionFields;
+
     let deFieldsInput = document.getElementById("DataExtensionFields");
     let deFieldOptions = '';
 
@@ -136,7 +150,8 @@ function onGetrequestedSchema(data) {
         if (element.name) {
             console.log("key", element.key);
             console.log("name", element.name);
-            deFieldOptions += `<option value="{{${element.key}}}">${element.name}</option>`;
+            let isSelected = selectedDEFieldsInput == element.key ? 'selected' : '';
+            deFieldOptions += `<option value="{{${element.key}}} ${isSelected}">${element.name}</option>`;
         }
     })
     deFieldsInput.innerHTML = deFieldOptions;
@@ -165,6 +180,7 @@ function save() {
             }
         ];
 
+        // função que varre os inputs com a classe ".js-activity-setting" e adiciona no inArguments
         $('.js-activity-setting').each(function () {
             const $el = $(this);
             const setting = {
@@ -173,6 +189,7 @@ function save() {
             };
 
             $.each(payload['arguments'].execute.inArguments, function (index, value) {
+                // lida com o caso de ser checkbox enviando true se :checked ou false
                 if ($el.attr('type') === 'checkbox') {
                     if ($el.is(":checked")) {
                         value[setting.id] = setting.value;
@@ -185,6 +202,7 @@ function save() {
             })
         });
         console.log('Updating Activity data:', JSON.stringify(payload));
+        // o valor "payload" é enviado para o SFMC que irá salvar os dados da config da Custom Activity
         connection.trigger('updateActivity', payload);
     }
 }
