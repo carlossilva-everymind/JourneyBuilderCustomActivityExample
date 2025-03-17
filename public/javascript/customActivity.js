@@ -1,10 +1,14 @@
 'use strict';
 
-const validateForm = function(cb) {
+/*
+    Arquivo JS que é entregue junto com o HTML da config da atividade
+*/
+
+const validateForm = function (cb) {
     $form = $('.js-settings-form');
 
     $form.validate({
-        submitHandler: function(form) { },
+        submitHandler: function (form) { },
         errorPlacement: function () { },
     });
 
@@ -17,12 +21,15 @@ let payload = {};
 let $form;
 $(window).ready(onRender);
 
+// Configurando os listeners de evento do SFMC
 connection.on('initActivity', initialize);
 connection.on('requestedTokens', onGetTokens);
 connection.on('requestedEndpoints', onGetEndpoints);
+connection.on('requestedInteraction', onGetInteraction);
+connection.on('requestedSchema', onGetrequestedSchema);
+connection.on('requestedTriggerEventDefinition', onGetTriggerEventDefinition);
 
 connection.on('clickedNext', save);
-connection.on('requestedTriggerEventDefinition', onGetTriggerEventDefinition);
 
 const buttonSettings = {
     button: 'next',
@@ -32,13 +39,16 @@ const buttonSettings = {
 };
 
 function onRender() {
+    // Envia enventos para o SFMC
     connection.trigger('ready');
     connection.trigger('requestTokens');
     connection.trigger('requestEndpoints');
+    connection.trigger('requestInteraction');
     connection.trigger('requestTriggerEventDefinition');
+    connection.trigger('requestSchema');
 
     // validation
-    validateForm(function($form) {
+    validateForm(function ($form) {
         $form.on('change click keyup input paste', 'input, textarea', function () {
             buttonSettings.enabled = $form.valid();
             connection.trigger('updateButton', buttonSettings);
@@ -47,7 +57,8 @@ function onRender() {
 }
 
 /**
- * Initialization
+ * Inicialização - é chamada quando o SFMC envia o evento initActivity
+ *                  os dados passado são os dados salvos quando existentes
  * @param data
  */
 function initialize(data) {
@@ -69,7 +80,7 @@ function initialize(data) {
     $.each(inArguments, function (index, inArgument) {
         $.each(inArgument, function (key, value) {
             const $el = $('#' + key);
-            if($el.attr('type') === 'checkbox') {
+            if ($el.attr('type') === 'checkbox') {
                 $el.prop('checked', value === 'true');
             } else {
                 $el.val(value);
@@ -77,7 +88,7 @@ function initialize(data) {
         });
     });
 
-    validateForm(function($form) {
+    validateForm(function ($form) {
         buttonSettings.enabled = $form.valid();
         connection.trigger('updateButton', buttonSettings);
     });
@@ -99,24 +110,41 @@ function onGetTokens(tokens) {
  * @param {*} endpoints
  */
 function onGetEndpoints(endpoints) {
-    console.log('Endpoint Requested',endpoints);
+    console.log('Endpoint Requested', endpoints);
+}
+
+/**
+ *
+ *
+ * @param {*} interaction
+ */
+function onGetInteraction(interaction) {
+    console.log('Interaction Requested', interaction);
 }
 
 /**
  * 
  *  
  */
- function onGetTriggerEventDefinition(data){     
+function onGetrequestedSchema(data) {
+    console.log('onRequestedSchema:', data);
+}
+
+/**
+ * 
+ *  
+ */
+function onGetTriggerEventDefinition(data) {
     console.log('TriggerDefinition', data);
-    let { dataExtensionId } = data;
-    updateDEFields(dataExtensionId,'DEFieldsById','DataExtensionFields');
- }
+}
 
 /**
  * Save settings
+ * Pega as informações do "form" que são os inputs de configuração e passa
+ * para o SFMC montando o json de config
  */
 function save() {
-    if($form.valid()) {
+    if ($form.valid()) {
         payload['metaData'].isConfigured = true;
 
         payload['arguments'].execute.inArguments = [
@@ -132,9 +160,9 @@ function save() {
                 value: $(this).val()
             };
 
-            $.each(payload['arguments'].execute.inArguments, function(index, value) {
-                if($el.attr('type') === 'checkbox') {
-                    if($el.is(":checked")) {
+            $.each(payload['arguments'].execute.inArguments, function (index, value) {
+                if ($el.attr('type') === 'checkbox') {
+                    if ($el.is(":checked")) {
                         value[setting.id] = setting.value;
                     } else {
                         value[setting.id] = 'false';
@@ -144,28 +172,7 @@ function save() {
                 }
             })
         });
-        console.log('Updating Activity data:',JSON.stringify(payload));
+        console.log('Updating Activity data:', JSON.stringify(payload));
         connection.trigger('updateActivity', payload);
     }
 }
-
-async function updateDEFields(dataExtensionId,service,elementID){
-    let postBody = `{
-            "service":"${service}",
-            "data":{
-                "value":"${dataExtensionId}"
-            }
-        }`;
-        fetch('https://mc336wmst6qwdrrw6bfzsq65tzd0.pub.sfmc-content.com/inlhdcmj2kh',
-            {method:'POST',body:postBody})
-        .then(response =>  response.json())
-        .then(response => {
-            let selectElement = document.getElementById(elementID);
-            let optionsElements= '';
-            selectElement.innerHTML = '';
-            for(const field of response.data) {
-                optionsElements += `<option value="${field}">${field}</option>`;
-            }
-            selectElement.innerHTML = optionsElements;
-        })
-};
