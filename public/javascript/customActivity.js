@@ -133,9 +133,10 @@ function onGetrequestedSchema(data) {
     let deFieldOptions = '';
 
     data.schema.forEach(element => {
-        if(element.name){
+        if (element.name) {
             console.log("key", element.key);
             console.log("name", element.name);
+            deFieldOptions += `<option value="{{${element.key}}}">${element.name}</option>`;
         }
     })
 }
