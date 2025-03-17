@@ -129,7 +129,7 @@ function onGetInteraction(interaction) {
 function onGetrequestedSchema(data) {
     console.log('onRequestedSchema:', data);
 
-    let deFieldsInput = document.getElementById("DEFields");
+    let deFieldsInput = document.getElementById("DataExtensionFields");
     let deFieldOptions = '';
 
     data.schema.forEach(element => {
@@ -139,6 +139,7 @@ function onGetrequestedSchema(data) {
             deFieldOptions += `<option value="{{${element.key}}}">${element.name}</option>`;
         }
     })
+    deFieldsInput.innerHTML = deFieldOptions;
 }
 
 /**
