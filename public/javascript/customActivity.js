@@ -128,6 +128,16 @@ function onGetInteraction(interaction) {
  */
 function onGetrequestedSchema(data) {
     console.log('onRequestedSchema:', data);
+
+    let deFieldsInput = document.getElementById("DEFields");
+    let deFieldOptions = '';
+
+    data.schema.forEach(element => {
+        if(element.name){
+            console.log("key", element.key);
+            console.log("name", element.name);
+        }
+    })
 }
 
 /**
