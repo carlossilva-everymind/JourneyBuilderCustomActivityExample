@@ -12,6 +12,7 @@ const logger = require('../utils/logger');
 exports.execute = async (req, res) => {
   // decode data
   const data = JWT(req.body);
+  console.log('Data before JWT decription: ', req.body);
   console.log('Executing: ', data);
 
   logger.info(data);
