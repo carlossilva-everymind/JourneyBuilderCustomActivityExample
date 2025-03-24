@@ -46,7 +46,7 @@
     "validate": {
       "url": "https://$DOMAIN/journey/validate",
       "verb": "POST",
-      "useJwt": true
+      "useJwt": false
     },
     "TestSave": {
       "url": "https://$DOMAIN/journey/testsave",
