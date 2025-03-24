@@ -11,12 +11,14 @@ const logger = require('../utils/logger');
  */
 exports.execute = async (req, res) => {
   // console.log('req.body: ', req.body);
-  logger.info('req.body: ', req.body);
+  logger.info('req.body:')
+  logger.info(req.body);
   // decode data
   const data = JWT(req.body);
   // console.log('Executing: ', data);
 
-  logger.info('Executing: ',data);
+  logger.info('Executing: ')
+  logger.info(data);
 
   try {
     const id = Uuidv1();
@@ -89,7 +91,7 @@ exports.validate = async (req, res) => {
   console.log('Validating', data);
 
   try {
-    
+
   } catch (error) {
     logger.error(error);
   }
