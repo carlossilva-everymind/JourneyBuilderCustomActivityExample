@@ -36,13 +36,15 @@ exports.execute = async (req, res) => {
         },
       },
     ]);
+    res.status(200).send({
+      status: 'ok',
+    });
   } catch (error) {
     logger.error(error);
+    res.status(500).send({
+      status: 'error',
+    });
   }
-
-  res.status(200).send({
-    status: 'ok',
-  });
 };
 
 /**
