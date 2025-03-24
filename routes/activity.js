@@ -10,6 +10,7 @@ const logger = require('../utils/logger');
  * @returns {Promise<void>}
  */
 exports.execute = async (req, res) => {
+  logger.info('Executing: ')
   // console.log('req.body: ', req.body);
   logger.info('req.body:')
   logger.info(req.body);
@@ -17,7 +18,7 @@ exports.execute = async (req, res) => {
   const data = JWT(req.body);
   // console.log('Executing: ', data);
 
-  logger.info('Executing: ')
+  console.log('decoded data:', data);
   logger.info(data);
 
   try {
@@ -85,10 +86,13 @@ exports.unpublish = (req, res) => {
  * @param res
  */
 exports.validate = async (req, res) => {
-  console.log('req.body: ', req.body);
+  logger.info('Validating: ')
+  logger.info('req.body:')
+  logger.info(req.body);
   // decode data
   const data = JWT(req.body);
-  console.log('Validating', data);
+  console.log('decoded data:', data);
+  logger.info(data);
 
   try {
 
