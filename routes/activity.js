@@ -10,12 +10,13 @@ const logger = require('../utils/logger');
  * @returns {Promise<void>}
  */
 exports.execute = async (req, res) => {
-  console.log('req.body: ', req.body);
+  // console.log('req.body: ', req.body);
+  logger.info('req.body: ', req.body);
   // decode data
   const data = JWT(req.body);
-  console.log('Executing: ', data);
+  // console.log('Executing: ', data);
 
-  logger.info(data);
+  logger.info('Executing: ',data);
 
   try {
     const id = Uuidv1();
