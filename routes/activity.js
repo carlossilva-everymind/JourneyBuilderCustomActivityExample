@@ -14,15 +14,15 @@ exports.execute = async (req, res) => {
   // console.log('req.body: ', req.body);
   logger.info('req.body:')
   logger.info(req.body);
-  // decode data
-  const data = JWT(req.body);
-  // console.log('Executing: ', data);
-
-  console.log('decoded data:', data);
-  logger.info(data);
 
   try {
     const id = Uuidv1();
+    // decode data
+    const data = JWT(req.body);
+    // console.log('Executing: ', data);
+
+    console.log('decoded data:', data);
+    logger.info(data);
 
     await SFClient.saveData(process.env.DATA_EXTENSION_EXTERNAL_KEY, [
       {
@@ -89,12 +89,12 @@ exports.validate = async (req, res) => {
   logger.info('Validating: ')
   logger.info('req.body:')
   logger.info(req.body);
-  // decode data
-  const data = JWT(req.body);
-  console.log('decoded data:', data);
-  logger.info(data);
 
   try {
+    // decode data
+    const data = JWT(req.body);
+    console.log('decoded data:', data);
+    logger.info(data);
 
   } catch (error) {
     logger.error(error);
