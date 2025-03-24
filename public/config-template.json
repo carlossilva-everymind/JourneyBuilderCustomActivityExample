@@ -17,7 +17,7 @@
       "body": "",
       "header": "",
       "format": "json",
-      "useJwt": true,
+      "useJwt": false,
       "timeout": 10000
     }
   },
@@ -46,7 +46,7 @@
     "validate": {
       "url": "https://$DOMAIN/journey/validate",
       "verb": "POST",
-      "useJwt": false
+      "useJwt": true
     },
     "TestSave": {
       "url": "https://$DOMAIN/journey/testsave",
