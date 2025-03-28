@@ -11,7 +11,7 @@ const logger = require('../utils/logger');
  */
 exports.execute = async (req, res) => {
   logger.info('Executing: ')
-  // console.log('req.body: ', req.body);
+  console.log('req.body: ', req.body);
   logger.info('req.body:')
   logger.info(req.body);
 
