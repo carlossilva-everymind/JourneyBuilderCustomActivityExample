@@ -37,8 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // serve config
 app.use('/config.json', routes.config);
-// serve UI
-app.use('/', routes.ui);
+
 
 // custom activity routes
 app.use('/journey/execute/', activityRouter.execute);
@@ -48,6 +47,9 @@ app.use('/journey/unpublish/', activityRouter.unpublish);
 app.use('/journey/validate/', activityRouter.validate);
 app.use('/journey/stop/', activityRouter.stop);
 app.use('/journey/TestSave/', activityRouter.testsave);
+
+// serve UI
+app.use('/', routes.ui);
 
 
 // catch 404 and forward to error handler
