@@ -17,7 +17,7 @@
       "body": "",
       "header": "",
       "format": "json",
-      "useJwt": false,
+      "useJwt": true,
       "timeout": 10000
     }
   },
