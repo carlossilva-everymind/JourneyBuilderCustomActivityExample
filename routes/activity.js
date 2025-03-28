@@ -89,6 +89,7 @@ exports.unpublish = (req, res) => {
  */
 exports.validate = async (req, res) => {
   logger.info('Validating: ')
+  console.log('Validating: ');
   logger.info('req.body:')
   logger.info(req.body);
 
